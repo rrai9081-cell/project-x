@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@500;700&display=swap');
+
+:root {
+    --bg-primary: #FFFFFF;
+    --card-bg: #F8F9FA;
+    --accent-cyan: #007BFF;
+    --accent-purple: #6F42C1;
+    --text-primary: #212529;
+    --text-secondary: #6C757D;
+}
+
+/* Glassmorphism Cards */
+.st-key-metric-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.st-key-metric-card:hover {
+    border-color: var(--accent-cyan);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+}
+
+/* Custom Typography */
+h1, h2, h3 {
+    font-family: 'Outfit', sans-serif !important;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+body {
+    font-family: 'Inter', sans-serif !important;
+    background-color: var(--bg-primary);
+}
+
+/* Sidebar Styling */
+[data-testid="stSidebar"] {
+    background-color: #F8F9FB !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Plotly Chart Styling */
+.js-plotly-plot {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Custom Metrics */
+.metric-label {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.metric-value {
+    color: var(--text-primary);
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-top: 2px;
+}
+
+.metric-delta {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.delta-up { color: #28A745; }
+.delta-down { color: #DC3545; }
+
+/* Beginner Tooltip */
+.beginner-guide-box {
+    background: #F0F4FF;
+    border-left: 4px solid var(--accent-cyan);
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    color: #212529;
+}

@@ -1,0 +1,34 @@
+# Personal Data & Portfolios
+archive/
+Statements/
+portfolio.json
+
+# Streamlit Local Config
+.streamlit/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+ENV/
+
+# Data & Notebooks
+*.xlsx
+*.pdf
+*.csv
+.ipynb_checkpoints/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Git
+.antigravityignore
