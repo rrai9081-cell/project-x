@@ -66,12 +66,16 @@ def get_global_indices():
     for name, ticker in indices.items():
         try:
             t = yf.Ticker(ticker)
-            hist = t.history(period="2d")
+            hist = t.history(period="5d")
             if len(hist) >= 2:
                 prev_close = hist['Close'].iloc[-2]
                 curr_close = hist['Close'].iloc[-1]
                 change = ((curr_close - prev_close) / prev_close) * 100
                 data[name] = {"price": curr_close, "change": change}
+            elif len(hist) == 1:
+                # Single day of data (e.g. after a long holiday)
+                curr_close = hist['Close'].iloc[-1]
+                data[name] = {"price": curr_close, "change": 0}
         except:
             continue
     return data
@@ -109,12 +113,15 @@ def get_macro_data():
     for name, ticker in macros.items():
         try:
             t = yf.Ticker(ticker)
-            hist = t.history(period="2d")
+            hist = t.history(period="5d")
             if len(hist) >= 2:
                 prev_close = hist['Close'].iloc[-2]
                 curr_close = hist['Close'].iloc[-1]
                 change = ((curr_close - prev_close) / prev_close) * 100
                 data[name] = {"price": curr_close, "change": change, "ticker": ticker}
+            elif len(hist) == 1:
+                curr_close = hist['Close'].iloc[-1]
+                data[name] = {"price": curr_close, "change": 0, "ticker": ticker}
         except:
             continue
     return data
