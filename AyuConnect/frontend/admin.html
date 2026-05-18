@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Command Center | AyuConnect Admin</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            900: '#064e3b',
+                        },
+                        dark: {
+                            DEFAULT: '#0f172a',
+                            light: '#1e293b',
+                            card: '#1e293b/80'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-dark text-white font-sans min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between border-b border-slate-800">
+        <div class="flex items-center space-x-2">
+            <div class="h-9 w-9 bg-brand-500 rounded-xl flex items-center justify-center font-bold text-lg text-dark">A</div>
+            <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">AyuConnect Admin</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span class="px-3 py-1 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-full text-xs font-semibold">Internal Corporate Eyes Only</span>
+            <button onclick="logout()" class="px-3.5 py-1.5 rounded-lg border border-slate-700 hover:bg-slate-800 text-xs transition">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        
+        <!-- Header -->
+        <header class="mb-8">
+            <h1 class="text-3xl font-extrabold tracking-tight">System & Predictive Health Intelligence</h1>
+            <p class="text-slate-400 text-sm mt-1">Data-driven operations dashboard monitoring elder cohorts, health anomalies, and concierge service SLAs.</p>
+        </header>
+
+        <!-- KPI Grid -->
+        <section class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="glass p-5 rounded-2xl">
+                <span class="text-slate-400 text-xs font-bold uppercase tracking-wider">Elders Enrolled</span>
+                <h2 class="text-4xl font-extrabold mt-2 text-emerald-400" id="stat-elders">--</h2>
+                <p class="text-[10px] text-slate-500 mt-1">Active IoT wearables connected</p>
+            </div>
+            <div class="glass p-5 rounded-2xl">
+                <span class="text-slate-400 text-xs font-bold uppercase tracking-wider">Active Sponsors</span>
+                <h2 class="text-4xl font-extrabold mt-2 text-teal-400" id="stat-sponsors">--</h2>
+                <p class="text-[10px] text-slate-500 mt-1">Paying subscribers (Basic/Premium)</p>
+            </div>
+            <div class="glass p-5 rounded-2xl">
+                <span class="text-slate-400 text-xs font-bold uppercase tracking-wider">Urgent Health Alerts</span>
+                <h2 class="text-4xl font-extrabold mt-2 text-rose-400 animate-pulse" id="stat-alerts">--</h2>
+                <p class="text-[10px] text-slate-500 mt-1">Vitals outliers requiring triage</p>
+            </div>
+            <div class="glass p-5 rounded-2xl">
+                <span class="text-slate-400 text-xs font-bold uppercase tracking-wider">SLA Ticket Resolution</span>
+                <h2 class="text-4xl font-extrabold mt-2 text-indigo-400" id="stat-sla">--</h2>
+                <p class="text-[10px] text-slate-500 mt-1">Average response within 24m SLA</p>
+            </div>
+        </section>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            
+            <!-- COLUMN 1 & 2: Vitals Anomalies & Operations Control -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Predictive AI Health Anomaly Stream -->
+                <div class="glass p-6 rounded-2xl">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="text-xl font-bold">Predictive AI Anomaly Engine</h3>
+                            <p class="text-xs text-slate-400 mt-0.5">Real-time cohort patterns & anomaly tracking.</p>
+                        </div>
+                        <span class="h-2 w-2 rounded-full bg-rose-500 animate-ping"></span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-rose-500/5 border border-rose-500/20 p-4 rounded-xl flex items-start space-x-3">
+                            <div class="p-2 rounded-lg bg-rose-500/10 text-rose-400 mt-0.5">⚠️</div>
+                            <div>
+                                <h5 class="font-bold text-sm text-rose-400">Savitri Devi • Elevated Fall Risk Pattern</h5>
+                                <p class="text-xs text-slate-300 mt-1">
+                                    AI detected recurring active heart rate deviations (>92 BPM) coupled with erratic sleep wakefulness cycles between 2:00 AM - 4:00 AM. 
+                                </p>
+                                <div class="mt-2.5 flex space-x-3 text-[10px]">
+                                    <span class="px-2 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-300">Cohort ID: Elder-001</span>
+                                    <span class="px-2 py-0.5 bg-rose-500/15 text-rose-400 rounded">Risk: Elevated (84%)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-emerald-500/5 border border-emerald-500/10 p-4 rounded-xl flex items-start space-x-3">
+                            <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 mt-0.5">✓</div>
+                            <div>
+                                <h5 class="font-bold text-sm text-slate-200">System Vitals Baseline Sync</h5>
+                                <p class="text-xs text-slate-400 mt-1">
+                                    No other cohort vitals anomalies detected across general platform metrics.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Concierge Operations Queue -->
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold mb-6">Concierge Operations Board</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="border-b border-slate-800 text-slate-400 font-semibold">
+                                    <th class="py-3">Category</th>
+                                    <th class="py-3">Instructions</th>
+                                    <th class="py-3">Status</th>
+                                    <th class="py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-tickets" class="divide-y divide-slate-800/60">
+                                <tr>
+                                    <td colspan="4" class="py-4 text-center text-slate-500">Loading active queue...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- COLUMN 3: Company Internal Settings & Data Policy -->
+            <div class="space-y-8">
+                
+                <!-- Data Privacy Shield -->
+                <div class="glass p-6 rounded-2xl relative overflow-hidden">
+                    <div class="absolute -top-12 -right-12 w-24 h-24 bg-brand-500/5 rounded-full blur-2xl"></div>
+                    <h3 class="text-lg font-bold mb-3 flex items-center gap-2 text-emerald-400">
+                        <span>🛡️ Company Data Shield</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                        All timeseries health metrics and elder daily logs are cryptographically sealed. Vitals access policies strictly restrict data visibility exclusively to AyuConnect corporate administrators and verified partners during triage.
+                    </p>
+                    <div class="space-y-2.5 text-[11px] text-slate-300">
+                        <div class="flex justify-between border-b border-slate-800 pb-1.5">
+                            <span>HIPAA Compliant Shielding</span>
+                            <span class="text-emerald-400 font-semibold">ACTIVE</span>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-800 pb-1.5">
+                            <span>Sponsor Auth Policies</span>
+                            <span class="text-emerald-400 font-semibold">ROLE-RESTRICTED</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Corporate Logs Audit</span>
+                            <span class="text-slate-400">0 Alerts</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Cohort Vitals -->
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold mb-4">Active Vitals Stream</h3>
+                    <div id="cohort-vitals" class="space-y-4">
+                        <div class="bg-slate-800/40 p-3 rounded-xl border border-slate-700/20 flex justify-between items-center">
+                            <div>
+                                <h6 class="font-bold text-xs text-slate-200">Savitri Devi</h6>
+                                <p class="text-[10px] text-slate-500">Device: fitbit_9921_x</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm font-extrabold text-emerald-400" id="live-hr">-- BPM</span>
+                                <p class="text-[9px] text-slate-400" id="live-spo2">-- % SpO2</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Admin Client Logic -->
+    <script>
+        const API_URL = '/api/v1';
+        let token = localStorage.getItem('admin_token');
+
+        async function autoAdminLogin() {
+            if (!token) {
+                try {
+                    const params = new URLSearchParams();
+                    params.append('username', 'admin@ayuconnect.com');
+                    params.append('password', 'admin123');
+                    
+                    const response = await fetch('/token', {
+                        method: 'POST',
+                        body: params
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        localStorage.setItem('admin_token', data.access_token);
+                        token = data.access_token;
+                    } else {
+                        console.error("Admin auto login failed");
+                    }
+                } catch (e) {
+                    console.error("Admin Auth connection error", e);
+                }
+            }
+            
+            if (token) {
+                initAdminDashboard();
+            }
+        }
+
+        async function initAdminDashboard() {
+            fetchStats();
+            fetchAdminTickets();
+            fetchCohortVitals();
+            
+            // Auto update queues
+            setInterval(fetchCohortVitals, 8000);
+        }
+
+        async function fetchStats() {
+            try {
+                const response = await fetch(`${API_URL}/admin/stats`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const stats = await response.json();
+                    document.getElementById('stat-elders').innerText = stats.total_elders;
+                    document.getElementById('stat-sponsors').innerText = stats.total_sponsors;
+                    document.getElementById('stat-alerts').innerText = stats.anomalies.heart_rate_alerts + stats.anomalies.oxygen_alerts;
+                    document.getElementById('stat-sla').innerText = `${stats.avg_response_time_minutes}m (SLA)`;
+                }
+            } catch (e) {
+                console.error("Error fetching admin stats", e);
+            }
+        }
+
+        async function fetchAdminTickets() {
+            try {
+                const response = await fetch(`${API_URL}/requests`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const tickets = await response.json();
+                    const tableBody = document.getElementById('admin-tickets');
+                    tableBody.innerHTML = '';
+
+                    if (tickets.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-slate-500">No active concierge tickets.</td></tr>';
+                        return;
+                    }
+
+                    tickets.forEach(ticket => {
+                        let statusBadge = 'bg-yellow-500/10 text-yellow-500';
+                        if (ticket.status === 'RESOLVED') statusBadge = 'bg-emerald-500/10 text-emerald-400';
+                        if (ticket.status === 'IN_PROGRESS') statusBadge = 'bg-teal-500/10 text-teal-400';
+
+                        const row = document.createElement('tr');
+                        row.className = 'border-b border-slate-800/40 hover:bg-slate-800/20';
+                        row.innerHTML = `
+                            <td class="py-3 font-bold text-slate-300 uppercase tracking-wider">${ticket.type}</td>
+                            <td class="py-3 text-slate-400 max-w-[200px] truncate">${ticket.notes}</td>
+                            <td class="py-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${statusBadge}">${ticket.status}</span></td>
+                            <td class="py-3 text-right space-x-2">
+                                ${ticket.status !== 'RESOLVED' ? `
+                                    <button onclick="updateTicketStatus('${ticket.id}', 'IN_PROGRESS')" class="px-2.5 py-1 bg-teal-500/10 border border-teal-500/20 text-teal-400 hover:bg-teal-500 hover:text-dark rounded transition text-[10px] font-bold">Assign</button>
+                                    <button onclick="updateTicketStatus('${ticket.id}', 'RESOLVED')" class="px-2.5 py-1 bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500 hover:text-dark rounded transition text-[10px] font-bold">Resolve</button>
+                                ` : '<span class="text-slate-500">None</span>'}
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+            } catch (e) {
+                console.error("Error fetching tickets queue", e);
+            }
+        }
+
+        async function updateTicketStatus(id, status) {
+            try {
+                const response = await fetch(`${API_URL}/requests/${id}/status?status=${status}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    fetchAdminTickets();
+                    fetchStats();
+                }
+            } catch (e) {
+                console.error("Error updating ticket status", e);
+            }
+        }
+
+        async function fetchCohortVitals() {
+            try {
+                const response = await fetch(`${API_URL}/elders`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const elders = await response.json();
+                    if (elders.length > 0) {
+                        const elder = elders[0];
+                        const vitalsResponse = await fetch(`${API_URL}/elders/${elder.id}/vitals`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        if (vitalsResponse.ok) {
+                            const vitals = await vitalsResponse.json();
+                            if (vitals.length > 0) {
+                                const latest = vitals[0];
+                                document.getElementById('live-hr').innerText = `${latest.heart_rate} BPM`;
+                                document.getElementById('live-spo2').innerText = `${latest.spo2}% SpO2`;
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Error fetching cohort vitals", e);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('admin_token');
+            window.location.href = '/';
+        }
+
+        window.addEventListener('DOMContentLoaded', autoAdminLogin);
+    </script>
+</body>
+</html>

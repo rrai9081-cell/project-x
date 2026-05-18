@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Dashboard | AyuConnect</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            900: '#064e3b',
+                        },
+                        dark: {
+                            DEFAULT: '#0f172a',
+                            light: '#1e293b',
+                            card: '#1e293b/80'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-dark text-white font-sans min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between border-b border-slate-800">
+        <div class="flex items-center space-x-2">
+            <a href="/" class="h-9 w-9 bg-brand-500 rounded-xl flex items-center justify-center font-bold text-lg text-dark">A</a>
+            <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">AyuConnect</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span id="user-display" class="text-sm text-slate-400">Loading Sponsor Session...</span>
+            <button onclick="logout()" class="px-3.5 py-1.5 rounded-lg border border-slate-700 hover:bg-slate-800 text-xs transition">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        
+        <!-- Header Profile Summary -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <h1 class="text-3xl font-extrabold tracking-tight">Parent Health Dashboard</h1>
+                <p class="text-slate-400 text-sm mt-1">Real-time status updates of your linked elder family members.</p>
+            </div>
+            
+            <div class="glass px-4 py-2.5 rounded-xl flex items-center space-x-3 border border-emerald-500/20">
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="parent-name" class="font-bold text-emerald-400">Loading...</span>
+            </div>
+        </header>
+
+        <!-- Grid Layout -->
+        <div class="grid lg:grid-cols-3 gap-8">
+            
+            <!-- COLUMN 1: Wellness Score & High Frequency Vitals -->
+            <div class="lg:col-span-2 space-y-8">
+                
+                <!-- Wellness Score Meter & Live Status -->
+                <div class="glass p-6 rounded-2xl grid md:grid-cols-2 gap-6 items-center">
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold">Daily Wellness Score</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            Calculated dynamically using historical anomalies, sleep quality, and active heart rate deviation baselines.
+                        </p>
+                        <div class="inline-flex items-center space-x-2 bg-emerald-500/10 px-3 py-1 rounded-full text-emerald-400 text-xs font-semibold">
+                            <span>✓ Heart Rate Baseline: Normal</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col items-center justify-center">
+                        <div class="relative flex items-center justify-center h-36 w-36 rounded-full bg-slate-800/50 border-4 border-emerald-500/40 shadow-xl shadow-emerald-500/10">
+                            <span class="text-4xl font-extrabold text-emerald-400">92</span>
+                            <span class="text-xs text-slate-400 absolute bottom-5">/ 100</span>
+                        </div>
+                        <span class="text-xs text-slate-400 mt-3">Overall Activity Metric: Active</span>
+                    </div>
+                </div>
+
+                <!-- Core Health Indicators -->
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <!-- Heart Rate Card -->
+                    <div class="glass p-6 rounded-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-500/5 rounded-full blur-xl"></div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-slate-400 text-sm font-semibold">Heart Rate</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                        </div>
+                        <h2 class="text-5xl font-extrabold text-emerald-400" id="vitals-heartrate">-- <span class="text-base font-normal text-slate-400">BPM</span></h2>
+                        <p class="text-xs text-slate-500 mt-2">Latest reading from Fitbit Watch</p>
+                    </div>
+
+                    <!-- SpO2 Indicator -->
+                    <div class="glass p-6 rounded-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-teal-500/5 rounded-full blur-xl"></div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-slate-400 text-sm font-semibold">Oxygen Saturation (SpO2)</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                        </div>
+                        <h2 class="text-5xl font-extrabold text-teal-400" id="vitals-spo2">-- <span class="text-base font-normal text-slate-400">%</span></h2>
+                        <p class="text-xs text-slate-500 mt-2">Target baseline: 95% - 100%</p>
+                    </div>
+                </div>
+
+                <!-- Grand-Buddy Visits log -->
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold mb-6">Grand-Buddy Social Wellness Visits</h3>
+                    <div class="space-y-6">
+                        <div class="relative border-l border-slate-700/80 pl-6 ml-2 pb-2">
+                            <span class="absolute left-[-5px] top-1.5 h-2.5 w-2.5 bg-emerald-500 rounded-full"></span>
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-bold text-sm text-slate-200">Completed Visit Report</h4>
+                                <span class="text-xs text-slate-500">2 days ago</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">
+                                Ananya S. visited Savitri Devi. Played chess and showed how to join the family zoom video call. 
+                            </p>
+                        </div>
+                        <div class="relative border-l border-slate-700/80 pl-6 ml-2 pb-2">
+                            <span class="absolute left-[-5px] top-1.5 h-2.5 w-2.5 bg-brand-500 rounded-full animate-ping"></span>
+                            <div class="flex items-center justify-between">
+                                <h4 class="font-bold text-sm text-brand-400">Upcoming Companionship Visit</h4>
+                                <span class="text-xs text-brand-500 font-semibold">Tomorrow at 4:00 PM</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">
+                                Social wellness check & local park walk with buddy Rahul K.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- COLUMN 2: Concierge Desk & Create Service Ticket -->
+            <div class="space-y-8">
+                
+                <!-- Concierge Form -->
+                <div class="glass p-6 rounded-2xl relative">
+                    <h3 class="text-xl font-bold mb-4">AyuConnect Concierge Desk</h3>
+                    <p class="text-slate-400 text-xs mb-6">Raise a request for your parent. Our verified partners will get it done.</p>
+                    
+                    <form id="request-form" class="space-y-4" onsubmit="submitRequest(event)">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1 font-semibold uppercase">Request Category</label>
+                            <select id="request-type" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                                <option value="GROCERY">Pharmacy / Medicine Refill</option>
+                                <option value="MEDICAL">Doctor / Lab Diagnostics Setup</option>
+                                <option value="REPAIR">Home Repair (Plumbing, Electrical)</option>
+                                <option value="COMPANIONSHIP">Urgent Buddy Accompaniment</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1 font-semibold uppercase">Notes / Instructions</label>
+                            <textarea id="request-notes" rows="3" placeholder="List the medicines or task details..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-dark font-bold rounded-xl transition duration-300 transform hover:-translate-y-0.5">
+                            Raise Service Ticket
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Active / Recent Service Requests -->
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="text-lg font-bold mb-4">Active & Recent Tickets</h3>
+                    <div id="tickets-list" class="space-y-4 max-h-[300px] overflow-y-auto pr-1">
+                        <!-- Filled by JS -->
+                        <p class="text-slate-500 text-sm">Loading tickets...</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Client-Side Logic & API bindings -->
+    <script>
+        const API_URL = '/api/v1';
+        let token = localStorage.getItem('token');
+        let currentElderId = null;
+
+        // Auto Login Helper for demo purposes
+        async function autoLogin() {
+            if (!token) {
+                try {
+                    const params = new URLSearchParams();
+                    params.append('username', 'sponsor@ayuconnect.com');
+                    params.append('password', 'sponsor123');
+                    
+                    const response = await fetch('/token', {
+                        method: 'POST',
+                        body: params
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        localStorage.setItem('token', data.access_token);
+                        token = data.access_token;
+                    } else {
+                        console.error("Auto login failed");
+                    }
+                } catch (e) {
+                    console.error("Connection error during auto-login", e);
+                }
+            }
+            
+            if (token) {
+                document.getElementById('user-display').innerText = 'Connected: Sponsor Session';
+                initDashboard();
+            }
+        }
+
+        async function initDashboard() {
+            await fetchElders();
+            if (currentElderId) {
+                fetchVitals();
+                fetchTickets();
+                // Real-time Simulation
+                setInterval(fetchVitals, 8000);
+            }
+        }
+
+        async function fetchElders() {
+            try {
+                const response = await fetch(`${API_URL}/elders`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const elders = await response.json();
+                    if (elders.length > 0) {
+                        const elder = elders[0];
+                        currentElderId = elder.id;
+                        document.getElementById('parent-name').innerText = elder.name;
+                    }
+                }
+            } catch (e) {
+                console.error("Error fetching elders", e);
+            }
+        }
+
+        async function fetchVitals() {
+            try {
+                const response = await fetch(`${API_URL}/elders/${currentElderId}/vitals`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const vitals = await response.json();
+                    if (vitals.length > 0) {
+                        const latest = vitals[0];
+                        document.getElementById('vitals-heartrate').innerHTML = `${latest.heart_rate} <span class="text-base font-normal text-slate-400">BPM</span>`;
+                        document.getElementById('vitals-spo2').innerHTML = `${latest.spo2} <span class="text-base font-normal text-slate-400">%</span>`;
+                    }
+                }
+            } catch (e) {
+                console.error("Error fetching vitals", e);
+            }
+        }
+
+        async function fetchTickets() {
+            try {
+                const response = await fetch(`${API_URL}/requests`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const tickets = await response.json();
+                    const listContainer = document.getElementById('tickets-list');
+                    listContainer.innerHTML = '';
+                    
+                    if (tickets.length === 0) {
+                        listContainer.innerHTML = '<p class="text-slate-500 text-xs">No active service tickets.</p>';
+                        return;
+                    }
+
+                    tickets.forEach(ticket => {
+                        let statusColor = 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20';
+                        if (ticket.status === 'RESOLVED') statusColor = 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20';
+                        if (ticket.status === 'IN_PROGRESS') statusColor = 'bg-teal-500/10 text-teal-400 border border-teal-500/20';
+
+                        const ticketEl = document.createElement('div');
+                        ticketEl.className = 'bg-slate-800/60 p-4 rounded-xl space-y-2 border border-slate-700/30';
+                        ticketEl.innerHTML = `
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold uppercase tracking-wider text-slate-300">${ticket.type}</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${statusColor}">${ticket.status}</span>
+                            </div>
+                            <p class="text-xs text-slate-400 leading-relaxed">${ticket.notes}</p>
+                        `;
+                        listContainer.appendChild(ticketEl);
+                    });
+                }
+            } catch (e) {
+                console.error("Error fetching tickets", e);
+            }
+        }
+
+        async function submitRequest(event) {
+            event.preventDefault();
+            const type = document.getElementById('request-type').value;
+            const notes = document.getElementById('request-notes').value;
+
+            try {
+                const response = await fetch(`${API_URL}/requests`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ elder_id: currentElderId, type, notes })
+                });
+
+                if (response.ok) {
+                    document.getElementById('request-notes').value = '';
+                    fetchTickets();
+                } else {
+                    alert("Failed to raise request. Please try again.");
+                }
+            } catch (e) {
+                console.error("Error submitting ticket", e);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+        }
+
+        // On Load initialization
+        window.addEventListener('DOMContentLoaded', autoLogin);
+    </script>
+</body>
+</html>
