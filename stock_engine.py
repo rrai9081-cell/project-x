@@ -23,16 +23,26 @@ def get_company_info(ticker_symbol):
     try:
         ticker = yf.Ticker(ticker_symbol)
         info = ticker.info
+        
+        # Fallback to fast_info for critical missing metrics
+        try:
+            fast = ticker.fast_info
+            market_cap = info.get('marketCap') or fast.market_cap
+            current_price = info.get('currentPrice') or fast.last_price
+        except:
+            market_cap = info.get('marketCap', 0)
+            current_price = info.get('currentPrice', 0)
+
         return {
             "shortName": info.get('shortName', ticker_symbol),
             "sector": info.get('sector', 'Other'),
             "industry": info.get('industry', 'Unknown'),
-            "trailingPE": info.get('trailingPE', 'N/A'),
-            "marketCap": info.get('marketCap', 0),
+            "trailingPE": info.get('trailingPE') or info.get('forwardPE', 'N/A'),
+            "marketCap": market_cap,
             "currency": info.get('currency', '$'),
-            "currentPrice": info.get('currentPrice', 0),
+            "currentPrice": current_price,
             "regularMarketChangePercent": info.get('regularMarketChangePercent', 0),
-            "beta": info.get('beta', 1.0), # Sensitivity to market
+            "beta": info.get('beta', 1.0),
             "fiftyTwoWeekLow": info.get('fiftyTwoWeekLow', 0),
             "fiftyTwoWeekHigh": info.get('fiftyTwoWeekHigh', 0)
         }
