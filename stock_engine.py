@@ -20,48 +20,35 @@ def get_stock_data(ticker_symbol, period="1y"):
 @st.cache_data(ttl=3600)
 def get_company_info(ticker_symbol):
     """Fetch company metadata and key metrics."""
+    ticker = yf.Ticker(ticker_symbol)
+    
     try:
-        ticker = yf.Ticker(ticker_symbol)
         info = ticker.info
+    except:
+        info = {}
         
-        # Fallback to fast_info for critical missing metrics
-        try:
-            fast = ticker.fast_info
-            market_cap = info.get('marketCap') or fast.market_cap
-            current_price = info.get('currentPrice') or fast.last_price
-        except:
-            market_cap = info.get('marketCap', 0)
-            current_price = info.get('currentPrice', 0)
+    try:
+        fast = ticker.fast_info
+        market_cap = info.get('marketCap') or fast.market_cap
+        current_price = info.get('currentPrice') or fast.last_price
+    except:
+        market_cap = info.get('marketCap', 0)
+        current_price = info.get('currentPrice', 0)
 
-        return {
-            "shortName": info.get('shortName', ticker_symbol),
-            "sector": info.get('sector', 'Other'),
-            "industry": info.get('industry', 'Unknown'),
-            "trailingPE": info.get('trailingPE') or info.get('forwardPE', 'N/A'),
-            "marketCap": market_cap,
-            "currency": info.get('currency', '$'),
-            "currentPrice": current_price,
-            "regularMarketChangePercent": info.get('regularMarketChangePercent', 0),
-            "beta": info.get('beta', 1.0),
-            "fiftyTwoWeekLow": info.get('fiftyTwoWeekLow', 0),
-            "fiftyTwoWeekHigh": info.get('fiftyTwoWeekHigh', 0)
-        }
-    except Exception as e:
-        # Handle 404/Not Found or other API issues
-        return {
-            "shortName": ticker_symbol,
-            "sector": "Unknown",
-            "industry": "Unknown",
-            "trailingPE": "N/A",
-            "marketCap": 0,
-            "currency": "",
-            "currentPrice": 0,
-            "regularMarketChangePercent": 0,
-            "beta": 1.0,
-            "fiftyTwoWeekLow": 0,
-            "fiftyTwoWeekHigh": 0,
-            "error": True
-        }
+    return {
+        "shortName": info.get('shortName', ticker_symbol),
+        "sector": info.get('sector', 'Unknown'),
+        "industry": info.get('industry', 'Unknown'),
+        "trailingPE": info.get('trailingPE') or info.get('forwardPE', 'N/A'),
+        "marketCap": market_cap,
+        "currency": info.get('currency', '$'),
+        "currentPrice": current_price,
+        "regularMarketChangePercent": info.get('regularMarketChangePercent', 0),
+        "beta": info.get('beta', 1.0),
+        "fiftyTwoWeekLow": info.get('fiftyTwoWeekLow', 0),
+        "fiftyTwoWeekHigh": info.get('fiftyTwoWeekHigh', 0),
+        "error": True if not info else False
+    }
 
 def get_global_indices():
     """Fetch performance of major global indices."""
