@@ -10,6 +10,7 @@
 
 - **🌍 Global Pulse**: Real-time tracking of Global Indices, USD/INR, Gold, and Crude Oil.
 - **📊 Stock Intelligence**: Interactive technical analysis with RSI, Moving Averages, and Sentiment Scoring.
+- **🎲 Monte Carlo Price Forecast**: Simulates 100 possible future price paths based on historical volatility.
 - **🇮🇳 Indian Market Hubs**: Specialized deep-dives for Nifty 50, Tata Group, Oil & Energy, and IT Giants.
 - **💼 Private Portfolio Tracker**: Secure, local-only portfolio management with AI health reports and dividend/growth signaling.
 - **💎 AI Bargain Finder**: Scans for high-quality stocks trading near their 52-week lows (Buy the Dip).

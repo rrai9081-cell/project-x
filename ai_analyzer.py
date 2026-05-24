@@ -118,3 +118,24 @@ def interpret_market_impact(headline, ticker, portfolio_sectors):
         return f"🔴 Negative for {ticker}: Risk levels increasing.", "red"
         
     return f"⚪ Update for {ticker}: Market is monitoring this development.", "gray"
+
+def run_monte_carlo_simulation(hist_df, days=30, simulations=100):
+    """Run a basic Monte Carlo simulation for future price forecasting."""
+    if hist_df is None or len(hist_df) < 20:
+        return None
+    
+    returns = hist_df['Close'].pct_change().dropna()
+    mu = returns.mean()
+    sigma = returns.std()
+    last_price = hist_df['Close'].iloc[-1]
+    
+    simulation_df = np.zeros((days, simulations))
+    for i in range(simulations):
+        prices = [last_price]
+        for d in range(days):
+            price = prices[-1] * (1 + np.random.normal(mu, sigma))
+            prices.append(price)
+        simulation_df[:, i] = prices[1:]
+        
+    return simulation_df
+

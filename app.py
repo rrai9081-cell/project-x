@@ -1,6 +1,6 @@
 import streamlit as st
 from stock_engine import get_stock_data, get_company_info, get_global_indices, get_recent_news, get_macro_data, get_nifty_50_hotlist, get_technical_indicators, get_budget_stocks, get_impact_news, get_tata_hotlist, get_oil_hotlist, get_tech_hotlist
-from ai_analyzer import analyze_sentiment, calculate_intelligence_score, get_technical_insights, analyze_macro_correlations, interpret_market_impact
+from ai_analyzer import analyze_sentiment, calculate_intelligence_score, get_technical_insights, analyze_macro_correlations, interpret_market_impact, run_monte_carlo_simulation
 from ui_components import metric_card, beginner_badge, section_header, educational_box, load_local_css, macro_header, incident_card, advice_badge, privacy_mask, groww_export_guide, budget_stock_card, impact_news_card, bargain_alert_card
 from portfolio_engine import load_portfolio, add_to_portfolio, remove_from_portfolio, parse_groww_csv
 from portfolio_advisor import get_investment_advice
@@ -160,6 +160,24 @@ with tab_analysis:
                               margin=dict(l=0, r=0, t=10, b=0), height=450, 
                               paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
             st.plotly_chart(fig, width='stretch')
+
+            st.markdown("---")
+            with st.expander("🎲 Monte Carlo Price Forecast (30 Days)", expanded=False):
+                st.markdown("<p style='font-size: 0.85rem; color: #6C757D;'>Simulating 100 possible future price paths based on historical volatility.</p>", unsafe_allow_html=True)
+                sim_data = run_monte_carlo_simulation(hist_df, days=30, simulations=100)
+                if sim_data is not None:
+                    sim_fig = go.Figure()
+                    for i in range(sim_data.shape[1]):
+                        sim_fig.add_trace(go.Scatter(y=sim_data[:, i], mode='lines', line=dict(color='rgba(0, 123, 255, 0.05)'), showlegend=False))
+                    avg_sim = sim_data.mean(axis=1)
+                    sim_fig.add_trace(go.Scatter(y=avg_sim, mode='lines', name='Expected Trend', line=dict(color='#DC3545', width=2)))
+                    sim_fig.update_layout(template="plotly_white", margin=dict(l=0, r=0, t=10, b=0), height=300,
+                                          paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
+                                          xaxis_title="Days Ahead", yaxis_title="Projected Price")
+                    st.plotly_chart(sim_fig, width='stretch')
+                    st.caption(f"Expected Price in 30 days: **{info.get('currency', '$')}{avg_sim[-1]:.2f}**")
+                else:
+                    st.info("Not enough historical data for simulation.")
 
         with side_col:
             section_header("AI Intelligence Report")
