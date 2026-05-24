@@ -100,6 +100,7 @@ def get_recent_news(ticker):
     except Exception as e:
         return []
 
+@st.cache_data(ttl=300)   # refresh every 5 minutes
 def get_macro_data():
     """Fetch performance of key commodities and currency exchange."""
     macros = {
