@@ -2,6 +2,7 @@ import streamlit as st
 from stock_engine import get_stock_data, get_company_info, get_global_indices, get_recent_news, get_macro_data, get_nifty_50_hotlist, get_technical_indicators, get_budget_stocks, get_impact_news, get_tata_hotlist, get_oil_hotlist, get_tech_hotlist
 from ai_analyzer import analyze_sentiment, calculate_intelligence_score, get_technical_insights, analyze_macro_correlations, interpret_market_impact, run_monte_carlo_simulation
 from ui_components import metric_card, beginner_badge, section_header, educational_box, load_local_css, macro_header, incident_card, advice_badge, privacy_mask, groww_export_guide, budget_stock_card, impact_news_card, bargain_alert_card
+from valuation_engine import get_valuation_metrics
 from portfolio_engine import load_portfolio, add_to_portfolio, remove_from_portfolio, parse_groww_csv
 from portfolio_advisor import get_investment_advice
 from portfolio_intelligence import analyze_portfolio_holistically
@@ -82,7 +83,7 @@ st.title("Global Stock Intelligence AI")
 st.markdown(f"**Market Date**: {datetime.now().strftime('%B %d, %Y')}")
 
 # Tabs for different views
-tab_analysis, tab_nifty, tab_portfolio = st.tabs(["📊 Stock Intelligence", "🇮🇳 Indian Markets Hotlist", "💼 My Private Portfolio"])
+tab_analysis, tab_valuation, tab_nifty, tab_portfolio = st.tabs(["📊 Stock Intelligence", "📈 Valuation", "🇮🇳 Indian Markets Hotlist", "💼 My Private Portfolio"])
 
 with tab_analysis:
     # Fetch Data
@@ -208,6 +209,23 @@ with tab_analysis:
     else:
         st.warning(f"⚠️ Could not find data for '{ticker_input}'. Please check the symbol in the sidebar.")
         st.info("Try common symbols like: AAPL (Apple), TSLA (Tesla), BTC-USD (Bitcoin), or RELIANCE.NS (Reliance India).")
+
+with tab_valuation:
+    # Fetch valuation data for the ticker
+    valuation = get_valuation_metrics(ticker_input)
+    if valuation and not valuation.get("error"):
+        st.markdown(f"## {valuation['company_name']} ({ticker_input.upper()})")
+        metric_card("Verdict", valuation["verdict"])
+        for m in valuation["metrics"]:
+            metric_card(m["name"], m["value"], help_text=m["help"])
+        st.markdown("### Analyst Consensus")
+        analyst = valuation["analyst"]
+        advice_badge(analyst["recommendation"], analyst["rec_color"])
+        st.caption(f"{analyst['num_analysts']} analyst opinions")
+        st.markdown(f"Target Price: {analyst['target_price']} (High: {analyst['target_high']}, Low: {analyst['target_low']})")
+        st.metric("Upside", analyst["upside"])
+    else:
+        st.error(valuation.get("error", "Valuation data not available."))
 
 with tab_nifty:
     section_header("🇮🇳 Indian Market Sectors", "Deep dives into top groups and industries")
