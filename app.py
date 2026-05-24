@@ -116,10 +116,12 @@ with tab_analysis:
             symbol_currency = info.get('currency', '$')
             metric_card("Current Price", f"{symbol_currency}{curr_price:,.2f}", f"{price_change:+.2f}%", help_text="Latest trading price.")
         with col2:
-            pe_ratio = info.get('trailingPE', 'N/A')
-            metric_card("P/E Ratio", f"{pe_ratio}", help_text="Price-to-Earnings: Cheap vs Expensive.")
+            pe_raw = info.get('trailingPE')
+            pe_ratio = f"{pe_raw:.1f}x" if isinstance(pe_raw, (int, float)) else "N/A"
+            metric_card("P/E Ratio", pe_ratio, help_text="Price-to-Earnings: Cheap vs Expensive.")
         with col3:
-            mkt_cap = info.get('marketCap', 0) / 1e9
+            mkt_cap_raw = info.get('marketCap') or 0
+            mkt_cap = mkt_cap_raw / 1e9
             metric_card("Market Cap", f"${mkt_cap:,.1f}B", help_text="Total company value.")
         with col4:
             sentiment_score, sentiment_label = analyze_sentiment(news)
@@ -211,21 +213,75 @@ with tab_analysis:
         st.info("Try common symbols like: AAPL (Apple), TSLA (Tesla), BTC-USD (Bitcoin), or RELIANCE.NS (Reliance India).")
 
 with tab_valuation:
-    # Fetch valuation data for the ticker
-    valuation = get_valuation_metrics(ticker_input)
+    with st.spinner(f"Loading valuation data for {ticker_input}..."):
+        valuation = get_valuation_metrics(ticker_input)
+
     if valuation and not valuation.get("error"):
-        st.markdown(f"## {valuation['company_name']} ({ticker_input.upper()})")
-        metric_card("Verdict", valuation["verdict"])
-        for m in valuation["metrics"]:
-            metric_card(m["name"], m["value"], help_text=m["help"])
-        st.markdown("### Analyst Consensus")
+        # ── Header ──────────────────────────────────────────────────────────
+        verdict_colors = {"green": "#28A745", "red": "#DC3545", "orange": "#FD7E14"}
+        v_color = verdict_colors.get(valuation["verdict_color"], "#6C757D")
+        st.markdown(
+            f"""<div style='margin-bottom:1rem;'>
+            <h2 style='margin:0;'>{valuation['company_name']} <span style='font-size:1rem;color:#6C757D;'>({ticker_input.upper()})</span></h2>
+            <span style='font-size:1rem;font-weight:700;color:{v_color};'>● {valuation['verdict']}</span>
+            &nbsp;&nbsp;<span style='color:#6C757D;font-size:0.85rem;'>Sector: {valuation['sector']} | Current Price: {valuation['current_price']}</span>
+            </div>""",
+            unsafe_allow_html=True
+        )
+
+        st.markdown("---")
+
+        # ── Valuation Metrics ────────────────────────────────────────────────
+        section_header("📊 Valuation Metrics", "How the stock is priced vs its fundamentals")
+        metric_cols = st.columns(3)
+        for i, m in enumerate(valuation["metrics"]):
+            m_color = verdict_colors.get(m["color"], "#6C757D")
+            with metric_cols[i % 3]:
+                st.markdown(
+                    f"""<div style='background:#F8F9FA;padding:14px;border-radius:8px;border-left:4px solid {m_color};margin-bottom:12px;'>
+                    <div style='font-size:0.8rem;color:#6C757D;'>{m['name']}</div>
+                    <div style='font-size:1.4rem;font-weight:700;color:#212529;'>{m['value']}</div>
+                    <div style='font-size:0.8rem;color:{m_color};margin-top:4px;'>{m['interpretation']}</div>
+                    </div>""",
+                    unsafe_allow_html=True
+                )
+
+        st.markdown("---")
+
+        # ── Financial Health ─────────────────────────────────────────────────
+        section_header("💚 Financial Health")
+        h_cols = st.columns(5)
+        for i, h in enumerate(valuation["health"]):
+            with h_cols[i % 5]:
+                st.metric(h["name"], h["value"])
+
+        st.markdown("---")
+
+        # ── Analyst Consensus ────────────────────────────────────────────────
+        section_header("🔬 Analyst Consensus")
         analyst = valuation["analyst"]
-        advice_badge(analyst["recommendation"], analyst["rec_color"])
-        st.caption(f"{analyst['num_analysts']} analyst opinions")
-        st.markdown(f"Target Price: {analyst['target_price']} (High: {analyst['target_high']}, Low: {analyst['target_low']})")
-        st.metric("Upside", analyst["upside"])
+        a_color = verdict_colors.get(analyst["rec_color"], "#6C757D")
+        acol1, acol2, acol3, acol4 = st.columns(4)
+        with acol1:
+            st.markdown(
+                f"""<div style='background:#F8F9FA;padding:14px;border-radius:8px;border-left:4px solid {a_color};'>
+                <div style='font-size:0.8rem;color:#6C757D;'>Consensus</div>
+                <div style='font-size:1.2rem;font-weight:700;color:{a_color};'>{analyst['recommendation']}</div>
+                <div style='font-size:0.75rem;color:#6C757D;'>{analyst['num_analysts']} analysts</div>
+                </div>""",
+                unsafe_allow_html=True
+            )
+        with acol2:
+            st.metric("Target Price", analyst["target_price"])
+        with acol3:
+            st.metric("Target High", analyst["target_high"])
+        with acol4:
+            upside_color = "normal" if analyst["upside_color"] == "green" else "inverse"
+            st.metric("Analyst Upside", analyst["upside"])
     else:
-        st.error(valuation.get("error", "Valuation data not available."))
+        err = valuation.get("error", "Valuation data not available.") if valuation else "Could not fetch valuation data."
+        st.error(f"⚠️ {err}")
+        st.info("Try a valid ticker like AAPL, RELIANCE.NS, TCS.NS, TSLA")
 
 with tab_nifty:
     section_header("🇮🇳 Indian Market Sectors", "Deep dives into top groups and industries")
@@ -241,8 +297,9 @@ with tab_nifty:
                 with cols[i]:
                     n_info = get_company_info(ticker)
                     n_name = n_info.get('shortName', ticker)
-                    n_price = n_info.get('currentPrice', 0)
-                    n_change = n_info.get('regularMarketChangePercent', 0)
+                    n_price = n_info.get('currentPrice') or 0
+                    n_change_raw = n_info.get('regularMarketChangePercent')
+                    n_change = n_change_raw if isinstance(n_change_raw, (int, float)) else 0
                     color = "green" if n_change > 0 else "red"
                     st.markdown(f"""
                     <div style="background: #F8F9FA; padding: 15px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08);">
