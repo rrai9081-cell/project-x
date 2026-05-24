@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raj Vardhan Kumar | MSc Financial Analytics - Career Dashboard</title>
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <style>
+        :root {
+            /* Light Theme Variables */
+            --bg-color: #f4f6f8;
+            --surface-color: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --border-color: #e5e7eb;
+            --primary-color: #0055a4; /* QUB Blue-ish */
+            --primary-hover: #004488;
+            --danger-color: #ef4444;
+            --warning-bg: #fffbeb;
+            --warning-border: #fcd34d;
+            --warning-text: #b45309;
+            --success-color: #10b981;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --radius: 6px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme Variables */
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --warning-bg: #451a03;
+            --warning-border: #78350f;
+            --warning-text: #fde68a;
+            --shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .theme-toggle {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        
+        .tab:hover {
+            color: var(--primary-color);
+        }
+        
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards and Layouts */
+        .card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Overview Tab */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .metric-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .metric-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0.25rem 0;
+        }
+        
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .warning-banner {
+            background-color: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            color: var(--warning-text);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 1.25rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .link-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* Forms and Trackers */
+        .add-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: end;
+            background-color: var(--bg-color);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--surface-color);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .btn {
+            padding: 0.6rem 1.25rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            transition: background-color 0.2s;
+            height: 38px;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .btn-icon {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+            padding: 0.4rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: inline-flex;
+            transition: all 0.2s;
+        }
+        
+        .btn-icon:hover {
+            background-color: var(--bg-color);
+            color: var(--danger-color);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        
+        th, td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        
+        .status-tracking { background-color: var(--bg-color); color: var(--text-secondary); border: 1px solid var(--border-color); }
+        .status-applied { background-color: rgba(59, 130, 246, 0.1); color: var(--primary-color); border: 1px solid rgba(59, 130, 246, 0.3); }
+        .status-interview { background-color: rgba(245, 158, 11, 0.1); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .status-offer { background-color: rgba(16, 185, 129, 0.1); color: var(--success-color); border: 1px solid rgba(16, 185, 129, 0.3); }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.35rem;
+            top: 0.25rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background-color: var(--surface-color);
+            border: 2px solid var(--primary-color);
+            z-index: 1;
+        }
+        
+        .timeline-date {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+        }
+        
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+        
+        .timeline-content {
+            color: var(--text-secondary);
+            background-color: var(--surface-color);
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            margin-top: 0.5rem;
+        }
+
+        .note-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-title">
+                <i class="ti ti-chart-pie"></i>
+                Raj Vardhan Kumar | Career Dashboard
+            </div>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                <i class="ti ti-moon"></i>
+            </button>
+        </header>
+
+        <div class="tabs">
+            <div class="tab active" data-target="overview"><i class="ti ti-layout-dashboard"></i> Overview</div>
+            <div class="tab" data-target="part-time"><i class="ti ti-briefcase"></i> Part-time Jobs</div>
+            <div class="tab" data-target="internships"><i class="ti ti-school"></i> QUB Internships</div>
+            <div class="tab" data-target="europe"><i class="ti ti-map-pin"></i> Europe Grad Roles</div>
+            <div class="tab" data-target="timeline"><i class="ti ti-timeline"></i> Timeline</div>
+        </div>
+
+        <!-- 1. Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="warning-banner">
+                <i class="ti ti-alert-triangle" style="font-size: 1.5rem;"></i>
+                <div>
+                    <strong>Visa Work Hours Limit:</strong> International students on a Student Visa are strictly limited to working a maximum of <strong>20 hours per week</strong> during term time. Full-time work is only permitted outside of term time.
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon"><i class="ti ti-send"></i></div>
+                    <div class="metric-value" id="metric-applied">0</div>
+                    <div class="metric-label">Total Applications Sent</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon"><i class="ti ti-eye"></i></div>
+                    <div class="metric-value" id="metric-tracking">0</div>
+                    <div class="metric-label">Roles Being Tracked</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon"><i class="ti ti-calendar-time"></i></div>
+                    <div class="metric-value" id="metric-days">0</div>
+                    <div class="metric-label">Days Until Sept 2026</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon"><i class="ti ti-briefcase"></i></div>
+                    <div class="metric-value">20</div>
+                    <div class="metric-label">Max Hrs / Week</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title"><i class="ti ti-link"></i> Quick Links</div>
+                <div class="quick-links">
+                    <a href="https://qub-csm.symplicity.com/students/" target="_blank" class="link-btn"><i class="ti ti-school"></i> QUB MyFuture</a>
+                    <a href="https://jobs.citi.com/belfast" target="_blank" class="link-btn"><i class="ti ti-building-bank"></i> Citi Belfast Jobs</a>
+                    <a href="https://www.nijobs.com/" target="_blank" class="link-btn"><i class="ti ti-search"></i> NIJobs</a>
+                    <a href="https://www.linkedin.com/jobs/" target="_blank" class="link-btn"><i class="ti ti-brand-linkedin"></i> LinkedIn</a>
+                    <a href="https://eures.ec.europa.eu/" target="_blank" class="link-btn"><i class="ti ti-world"></i> EURES (Europe)</a>
+                    <a href="https://uk.indeed.com/jobs-in-Belfast" target="_blank" class="link-btn"><i class="ti ti-building-skyscraper"></i> Indeed Belfast</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Part-time Jobs Tab -->
+        <div id="part-time" class="tab-content">
+            <div class="card">
+                <div class="card-title"><i class="ti ti-briefcase"></i> Belfast Part-Time Job Tracker</div>
+                <div class="note-text"><i class="ti ti-info-circle"></i> Focus: QUB campus roles, retail, hospitality, and finance admin via Reed/Hays/Robert Half.</div>
+                
+                <form class="add-form" id="form-part-time">
+                    <div class="form-group">
+                        <label class="form-label">Company</label>
+                        <input type="text" id="pt-company" required placeholder="e.g. QUB Student Union">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <input type="text" id="pt-role" required placeholder="e.g. Finance Admin">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deadline</label>
+                        <input type="date" id="pt-deadline" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select id="pt-status">
+                            <option value="tracking">Tracking</option>
+                            <option value="applied">Applied</option>
+                            <option value="interview">Interview</option>
+                            <option value="offer">Offer</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn"><i class="ti ti-plus"></i> Add Job</button>
+                </form>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Role</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                                <th style="width: 50px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-part-time">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. QUB Internships Tab -->
+        <div id="internships" class="tab-content">
+            <div class="card">
+                <div class="card-title"><i class="ti ti-school"></i> QUB Internships Tracker</div>
+                <div class="note-text"><i class="ti ti-bulb"></i> Tip: Use prefix 'QUBINTERN' on MyFuture. Most internships open around February 2027.</div>
+                
+                <form class="add-form" id="form-internship">
+                    <div class="form-group">
+                        <label class="form-label">Company</label>
+                        <input type="text" id="in-company" required placeholder="e.g. Citi Belfast">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <input type="text" id="in-role" required placeholder="e.g. Placement Analyst">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deadline</label>
+                        <input type="date" id="in-deadline" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select id="in-status">
+                            <option value="tracking">Tracking</option>
+                            <option value="applied">Applied</option>
+                            <option value="interview">Interview</option>
+                            <option value="offer">Offer</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn"><i class="ti ti-plus"></i> Add Internship</button>
+                </form>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Role</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                                <th style="width: 50px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-internships">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Europe Grad Roles Tab -->
+        <div id="europe" class="tab-content">
+            <div class="card">
+                <div class="card-title"><i class="ti ti-map-pin"></i> Europe Grad Roles Tracker</div>
+                <div class="note-text"><i class="ti ti-info-circle"></i> Note: Target dates are Oct-Nov 2026 for 2027 entry. Focus on visa-friendly routes.</div>
+                
+                <form class="add-form" id="form-europe">
+                    <div class="form-group">
+                        <label class="form-label">Company</label>
+                        <input type="text" id="eu-company" required placeholder="e.g. Deutsche Bank">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <input type="text" id="eu-role" required placeholder="e.g. Finance Analyst">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Country</label>
+                        <input type="text" id="eu-country" required placeholder="e.g. Germany">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deadline</label>
+                        <input type="date" id="eu-deadline" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select id="eu-status">
+                            <option value="tracking">Tracking</option>
+                            <option value="applied">Applied</option>
+                            <option value="interview">Interview</option>
+                            <option value="offer">Offer</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn"><i class="ti ti-plus"></i> Add Role</button>
+                </form>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Role</th>
+                                <th>Country</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                                <th style="width: 50px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-europe">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Timeline Tab -->
+        <div id="timeline" class="tab-content">
+            <div class="card">
+                <div class="card-title"><i class="ti ti-timeline"></i> Action Plan Timeline</div>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Now → September 2026</div>
+                        <div class="timeline-title">Arrival & Setup</div>
+                        <div class="timeline-content">
+                            Enrol in MSc Financial Analytics at Queen's University Belfast. Activate QUB MyFuture account. Begin immediate search for part-time jobs (max 20hrs/week) via campus roles or local agencies (Reed, Hays).
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">October 2026 – November 2026</div>
+                        <div class="timeline-title">European Grad Cycles Open</div>
+                        <div class="timeline-content">
+                            Major European banks and financial institutions open their 2027 graduate programs. Start applying to target countries with favorable visa routes: Ireland (Dublin - no visa needed), Germany (job-seeker visa), Netherlands (orientation visa), Luxembourg.
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">February 2027</div>
+                        <div class="timeline-title">QUB Internships Search</div>
+                        <div class="timeline-content">
+                            QUBINTERN roles open on MyFuture. Apply aggressively for summer placements and internships in Belfast (e.g., Citi, EY, FD Technologies, Davy Group).
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Summer 2027</div>
+                        <div class="timeline-title">Internship Execution</div>
+                        <div class="timeline-content">
+                            Complete summer internship/placement. Focus on securing a return offer or building strong local references for the post-grad job hunt.
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">Post-Graduation (Late 2027)</div>
+                        <div class="timeline-title">Full-time Transition</div>
+                        <div class="timeline-content">
+                            Transition to Graduate visa routes (UK 2-year Graduate Route or EU Job-Seeker visas). Begin full-time employment.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // State Management (In-memory, no localStorage as requested)
+        const state = {
+            theme: 'light',
+            jobs: [
+                // Part-time
+                { id: 1, tab: 'part-time', company: 'QUB Campus', role: 'Student Assistant', deadline: '2026-09-15', status: 'tracking' },
+                { id: 2, tab: 'part-time', company: 'Retail/Hospitality', role: 'Customer Service', deadline: '2026-09-20', status: 'applied' },
+                { id: 3, tab: 'part-time', company: 'Reed/Hays/Robert Half', role: 'Finance Admin', deadline: '2026-10-01', status: 'tracking' },
+                
+                // Internships
+                { id: 4, tab: 'internships', company: 'Citi Belfast', role: 'Placement Analyst', deadline: '2027-02-15', status: 'tracking' },
+                { id: 5, tab: 'internships', company: 'EY', role: 'Corporate Finance', deadline: '2027-02-28', status: 'tracking' },
+                { id: 6, tab: 'internships', company: 'FD Technologies', role: 'Data Analyst', deadline: '2027-03-01', status: 'tracking' },
+                { id: 7, tab: 'internships', company: 'Davy Group', role: 'Wealth Management', deadline: '2027-03-10', status: 'tracking' },
+
+                // Europe Grad Roles
+                { id: 8, tab: 'europe', company: 'Deutsche Bank', role: 'Finance Analyst', country: 'Germany', deadline: '2026-10-31', status: 'tracking' },
+                { id: 9, tab: 'europe', company: 'ING', role: 'Risk Trainee', country: 'Netherlands', deadline: '2026-11-15', status: 'tracking' },
+                { id: 10, tab: 'europe', company: 'Clearstream/BNP', role: 'Fund Admin', country: 'Luxembourg', deadline: '2026-11-30', status: 'tracking' },
+                { id: 11, tab: 'europe', company: 'Bank of Ireland', role: 'Grad Prog', country: 'Dublin (No Visa)', deadline: '2026-10-15', status: 'tracking' },
+            ]
+        };
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            const html = document.documentElement;
+            state.theme = state.theme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', state.theme);
+            themeToggle.innerHTML = state.theme === 'light' ? '<i class="ti ti-moon"></i>' : '<i class="ti ti-sun"></i>';
+        });
+
+        // Tab Switching
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.target).classList.add('active');
+            });
+        });
+
+        // Render Functions
+        function renderTables() {
+            renderTable('part-time', 'tbody-part-time');
+            renderTable('internships', 'tbody-internships');
+            renderTable('europe', 'tbody-europe', true);
+            updateMetrics();
+        }
+
+        function renderTable(tabName, tbodyId, hasCountry = false) {
+            const tbody = document.getElementById(tbodyId);
+            tbody.innerHTML = '';
+            
+            const filteredJobs = state.jobs.filter(j => j.tab === tabName);
+            
+            filteredJobs.forEach(job => {
+                const tr = document.createElement('tr');
+                let rowHTML = `
+                    <td><strong>${job.company}</strong></td>
+                    <td>${job.role}</td>
+                    ${hasCountry ? `<td>${job.country}</td>` : ''}
+                    <td>${formatDate(job.deadline)}</td>
+                    <td><span class="badge status-${job.status}">${job.status}</span></td>
+                    <td>
+                        <button class="btn-icon" onclick="deleteJob(${job.id})" title="Delete">
+                            <i class="ti ti-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tr.innerHTML = rowHTML;
+                tbody.appendChild(tr);
+            });
+            
+            if (filteredJobs.length === 0) {
+                const cols = hasCountry ? 6 : 5;
+                tbody.innerHTML = `<tr><td colspan="${cols}" style="text-align: center; color: var(--text-secondary);">No entries found. Add one above!</td></tr>`;
+            }
+        }
+
+        function updateMetrics() {
+            const applied = state.jobs.filter(j => ['applied', 'interview', 'offer'].includes(j.status)).length;
+            const tracking = state.jobs.length;
+            
+            document.getElementById('metric-applied').textContent = applied;
+            document.getElementById('metric-tracking').textContent = tracking;
+            
+            // Days until Sept 1, 2026
+            const targetDate = new Date('2026-09-01');
+            const today = new Date();
+            const diffTime = targetDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            document.getElementById('metric-days').textContent = diffDays > 0 ? diffDays : 0;
+        }
+
+        // Action Handlers
+        window.deleteJob = function(id) {
+            state.jobs = state.jobs.filter(j => j.id !== id);
+            renderTables();
+        }
+
+        function handleAdd(e, tabName, formId) {
+            e.preventDefault();
+            const form = document.getElementById(formId);
+            const prefix = formId === 'form-part-time' ? 'pt' : formId === 'form-internship' ? 'in' : 'eu';
+            
+            const newJob = {
+                id: Date.now(),
+                tab: tabName,
+                company: document.getElementById(`${prefix}-company`).value,
+                role: document.getElementById(`${prefix}-role`).value,
+                deadline: document.getElementById(`${prefix}-deadline`).value,
+                status: document.getElementById(`${prefix}-status`).value
+            };
+            
+            if (tabName === 'europe') {
+                newJob.country = document.getElementById(`${prefix}-country`).value;
+            }
+            
+            state.jobs.push(newJob);
+            renderTables();
+            form.reset();
+        }
+
+        document.getElementById('form-part-time').addEventListener('submit', (e) => handleAdd(e, 'part-time', 'form-part-time'));
+        document.getElementById('form-internship').addEventListener('submit', (e) => handleAdd(e, 'internships', 'form-internship'));
+        document.getElementById('form-europe').addEventListener('submit', (e) => handleAdd(e, 'europe', 'form-europe'));
+
+        // Utils
+        function formatDate(dateStr) {
+            if (!dateStr) return 'N/A';
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateStr).toLocaleDateString(undefined, options);
+        }
+
+        // Initial Render
+        renderTables();
+    </script>
+</body>
+</html>
