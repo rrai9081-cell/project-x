@@ -2,6 +2,7 @@ import yfinance as yf
 import pandas as pd
 import streamlit as st
 from datetime import datetime, timedelta
+from macro_live import get_live_macro_extras
 
 @st.cache_data(ttl=600)  # Cache for 10 minutes
 def get_stock_data(ticker_symbol, period="1y"):
@@ -121,6 +122,12 @@ def get_macro_data():
                 data[name] = {"price": curr_close, "change": 0, "ticker": ticker}
         except:
             continue
+    # Merge live extras: GBP/INR, INR/GBP, Brent Crude
+    try:
+        extras = get_live_macro_extras()
+        data.update(extras)
+    except Exception:
+        pass
     return data
 
 def get_nifty_50_hotlist():

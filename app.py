@@ -3,6 +3,7 @@ from stock_engine import get_stock_data, get_company_info, get_global_indices, g
 from ai_analyzer import analyze_sentiment, calculate_intelligence_score, get_technical_insights, analyze_macro_correlations, interpret_market_impact, run_monte_carlo_simulation
 from ui_components import metric_card, beginner_badge, section_header, educational_box, load_local_css, macro_header, incident_card, advice_badge, privacy_mask, groww_export_guide, budget_stock_card, impact_news_card, bargain_alert_card
 from valuation_engine import get_valuation_metrics
+from macro_live import format_gbp_inr_display
 from portfolio_engine import load_portfolio, add_to_portfolio, remove_from_portfolio, parse_groww_csv
 from portfolio_advisor import get_investment_advice
 from portfolio_intelligence import analyze_portfolio_holistically
@@ -34,7 +35,7 @@ with st.sidebar:
     st.markdown("---")
     
     # 🌍 Global Pulse (Macros)
-    st.subheader("Global Pulse")
+    st.subheader("🌍 Global Pulse")
     macros = get_macro_data()
     mcol1, mcol2 = st.columns(2)
     with mcol1:
@@ -42,9 +43,15 @@ with st.sidebar:
         macro_header("Gold", f"${gold['price']:,.1f}", gold['change'])
         usdinr = macros.get("USD / INR", {"price": 0, "change": 0})
         macro_header("USD/INR", f"₹{usdinr['price']:.2f}", usdinr['change'])
+        gbpinr = macros.get("GBP / INR", {"price": 0, "change": 0})
+        macro_header("GBP/INR", f"₹{gbpinr['price']:,.2f}", gbpinr['change'])
     with mcol2:
         crude = macros.get("Crude Oil", {"price": 0, "change": 0})
-        macro_header("Crude Oil", f"${crude['price']:,.2f}", crude['change'])
+        macro_header("WTI Crude", f"${crude['price']:,.2f}", crude['change'])
+        brent = macros.get("Brent Crude", {"price": 0, "change": 0})
+        macro_header("Brent", f"${brent['price']:,.2f}", brent['change'])
+        inrgbp = macros.get("INR / GBP", {"price": 0, "change": 0})
+        macro_header("INR/GBP", f"£{inrgbp['price']:.4f}", inrgbp['change'])
 
     st.markdown("---")
     
@@ -93,9 +100,48 @@ with tab_analysis:
         news = get_recent_news(ticker_input)
 
     if hist_df is not None and not hist_df.empty:
-        # Macro Correlation Insights (Dynamic)
-        macro_insights = analyze_macro_correlations(macros)
-        with st.expander("🌍 Live Macro & Incident Watch", expanded=True):
+        # ── Live Macro Dashboard ──────────────────────────────────────────────
+        with st.expander("🌐 Live Global Macro Dashboard", expanded=True):
+            mcols = st.columns(6)
+            _macro_tiles = [
+                ("Gold (Spot)",  "GC",  "${:.1f}",     1e0),
+                ("WTI Crude",    "CL",  "${:.2f}",     1e0),
+                ("Brent Crude",  "BZ",  "${:.2f}",     1e0),
+                ("USD / INR",    "INR", "₹{:.2f}",     1e0),
+                ("GBP / INR",    "GBP", "₹{:,.2f}",   1e0),
+                ("INR / GBP",    "INR", "£{:.4f}",     1e0),
+            ]
+            _macro_keys = ["Gold (Spot)", "Crude Oil", "Brent Crude", "USD / INR", "GBP / INR", "INR / GBP"]
+            _macro_labels = ["Gold", "WTI Crude", "Brent Crude", "USD/INR", "GBP/INR", "INR/GBP"]
+            _macro_fmts   = ["${:.1f}", "${:.2f}", "${:.2f}", "₹{:.2f}", "₹{:,.2f}", "£{:.4f}"]
+            for col, key, label, fmt in zip(mcols, _macro_keys, _macro_labels, _macro_fmts):
+                m = macros.get(key, {"price": 0, "change": 0})
+                price = m.get("price", 0) or 0
+                chg   = m.get("change", 0) or 0
+                clr   = "#28A745" if chg >= 0 else "#DC3545"
+                arrow = "▲" if chg >= 0 else "▼"
+                try:
+                    price_str = fmt.format(price)
+                except Exception:
+                    price_str = str(price)
+                with col:
+                    st.markdown(
+                        f"""<div style='background:#F8F9FA;padding:12px 10px;border-radius:8px;
+                        border-top:3px solid {clr};text-align:center;margin-bottom:6px;'>
+                        <div style='font-size:0.7rem;color:#6C757D;font-weight:600;'>{label}</div>
+                        <div style='font-size:1.05rem;font-weight:700;color:#212529;'>{price_str}</div>
+                        <div style='font-size:0.75rem;color:{clr};'>{arrow} {chg:+.2f}%</div>
+                        </div>""",
+                        unsafe_allow_html=True
+                    )
+            # GBP insight
+            gbp_price = macros.get("GBP / INR", {}).get("price", 0) or 0
+            if gbp_price > 0:
+                st.caption(f"💡 Currency insight: {format_gbp_inr_display(gbp_price)}")
+
+            st.markdown("---")
+            # Macro Correlation Insights (Dynamic)
+            macro_insights = analyze_macro_correlations(macros)
             for insight in macro_insights:
                 st.write(insight)
 
